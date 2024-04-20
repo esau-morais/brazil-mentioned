@@ -17,8 +17,13 @@ const RootLayout = ({
   children: ReactNode;
 }>) => {
   return (
-    <html lang="en">
-      <body className={cn("w-full min-h-dvh", GeistMono.className)}>
+    <html lang="en" className="dark">
+      <body
+        className={cn(
+          "w-full min-h-dvh bg-background text-foreground",
+          GeistMono.className,
+        )}
+      >
         <main>{children}</main>
       </body>
     </html>
