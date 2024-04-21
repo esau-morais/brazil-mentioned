@@ -13,8 +13,10 @@ export const metadata: Metadata = {
 
 const RootLayout = ({
   children,
+  modal,
 }: Readonly<{
   children: ReactNode;
+  modal: ReactNode;
 }>) => {
   return (
     <html lang="en" className="dark">
@@ -23,8 +25,11 @@ const RootLayout = ({
           "w-full min-h-dvh bg-background text-foreground",
           GeistMono.className,
         )}
+        suppressHydrationWarning
       >
         <main>{children}</main>
+        <div id="modal-root" />
+        {modal}
       </body>
     </html>
   );
