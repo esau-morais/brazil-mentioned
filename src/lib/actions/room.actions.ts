@@ -1,20 +1,31 @@
 "use server";
 
 import { tursoClient } from "../db";
+import { redirect } from "next/navigation";
+import { schema } from "../schemas";
 
-export const createRoom = async (formData: FormData) => {
-  try {
-    const name = formData.get("name");
-    const created_by = formData.get("created_by");
-    // if (typeof name !== "string" || typeof created_by !== "number")
-    //   throw new Error("name and created_by are required");
+export const createUser = async (_: unknown, formData: FormData) => {
+  const validatedFields = await schema.safeParseAsync({
+    nickname: formData.get("nickname"),
+  });
 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const user = await tursoClient.execute({
+    sql: "INSERT INTO users (nickname) VALUES (?)",
+    args: [validatedFields.data.nickname],
+  });
+
+  if (user.lastInsertRowid) {
     const room = await tursoClient.execute({
       sql: "INSERT INTO rooms (name, created_by) VALUES (?, ?)",
-      args: [],
+      // TODO: generate dynamic room name based on nickname and user id
+      args: ["any", user.lastInsertRowid],
     });
-    console.info({ room });
-  } catch (error) {
-    throw new Error(error);
+    redirect(`/room/${room.lastInsertRowid}`);
   }
 };

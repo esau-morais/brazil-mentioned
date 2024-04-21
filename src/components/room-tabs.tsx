@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,16 +49,19 @@ export const RoomTabs = () => {
       content: (
         <Card>
           <CardContent>
-            <div className="flex items-center space-x-2">
-              <Input id="room-code" placeholder="Enter room code" />
-              <Link
-                className={buttonVariants({ size: "icon" })}
-                // TODO: send dynamic room code
-                href={`/auth?${createQueryString("room", "join.")}`}
-              >
-                <ArrowRight />
-              </Link>
-            </div>
+            <form>
+              <div className="flex items-center space-x-2">
+                <Input id="room-code" placeholder="Enter room code" />
+                <Button type="submit" size="icon">
+                  <ArrowRight />
+                </Button>
+                <Link
+                  className={buttonVariants({ size: "icon" })}
+                  // TODO: send dynamic room code
+                  href={`/auth?${createQueryString("room", "join.")}`}
+                ></Link>
+              </div>
+            </form>
           </CardContent>
         </Card>
       ),
