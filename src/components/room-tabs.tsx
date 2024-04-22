@@ -9,9 +9,18 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { joinRoom } from "@/lib/actions/room.actions";
+import { useFormState } from "react-dom";
+
+const initialState = {
+  errors: {
+    "room-code": [],
+  },
+};
 
 export const RoomTabs = () => {
   const searchParams = useSearchParams();
+  const [state, formAction] = useFormState(joinRoom, initialState);
 
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair
@@ -49,7 +58,7 @@ export const RoomTabs = () => {
       content: (
         <Card>
           <CardContent>
-            <form action={() => {}}>
+            <form action={formAction}>
               <div className="flex items-center space-x-2">
                 <Input
                   id="room-code"
@@ -60,6 +69,11 @@ export const RoomTabs = () => {
                   <ArrowRight />
                 </Button>
               </div>
+              {state?.errors ? (
+                <p className="text-[0.8rem] font-medium text-destructive">
+                  {state?.errors["room-code"]?.[0]}
+                </p>
+              ) : null}
             </form>
           </CardContent>
         </Card>

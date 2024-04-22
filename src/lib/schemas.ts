@@ -4,7 +4,7 @@ import { tursoClient } from "./db";
 
 const filter = new Filter();
 
-export const schema = z.object({
+export const usernameSchema = z.object({
   username: z
     .string()
     .min(3, "please enter a username")
@@ -14,18 +14,25 @@ export const schema = z.object({
     })
     .refine((val) => !filter.isProfane(val), {
       message: "please choose an appropriate username",
-    })
+    }),
+});
+
+export const roomSchema = z.object({
+  "room-code": z
+    .string()
+    .min(1, "please enter the room code")
+    .uuid({ message: "room code must be its uuid" })
     .refine(
-      async (username) => {
-        const userExists = await tursoClient.execute({
-          sql: "SELECT * FROM users WHERE username = ?",
-          args: [username],
+      async (roomId) => {
+        const roomExists = await tursoClient.execute({
+          sql: "SELECT * FROM rooms WHERE id = ?",
+          args: [roomId],
         });
 
-        return !userExists.rows.length;
+        return roomExists.rows.length;
       },
       {
-        message: "username is already taken",
+        message: "room does not exist",
       },
     ),
 });

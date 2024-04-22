@@ -15,12 +15,8 @@ export const Modal = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return createPortal(
-    <div className="relative">
-      <dialog
-        ref={dialogRef}
-        className="fixed inset-0 bg-black/80"
-        onClose={back}
-      >
+    <div className="absolute inset-0 bg-black/80 flex items-start justify-center z-10 backdrop-blur-sm">
+      <dialog ref={dialogRef} onClose={back}>
         {children}
       </dialog>
     </div>,

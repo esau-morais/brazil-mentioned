@@ -16,16 +16,17 @@ import { createUser } from "@/lib/actions/room.actions";
 import { useFormState } from "react-dom";
 import { cn } from "@/lib/utils";
 
-const initialState = {
-  errors: {
-    username: [],
-  },
-};
-
 export const UsernameForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const roomType = searchParams.get("room");
+  const room = searchParams.get("room");
+
+  const initialState = {
+    roomId: room,
+    errors: {
+      username: [],
+    },
+  };
 
   const [state, formAction] = useFormState(createUser, initialState);
 
@@ -42,7 +43,7 @@ export const UsernameForm = () => {
             <ChevronLeft size={20} />
           </Button>
           <span>
-            {roomType?.startsWith("create") ? "Create room" : "Join room"}
+            {room?.startsWith("create") ? "Create room" : "Join room"}
           </span>
         </CardTitle>
         <CardDescription>
