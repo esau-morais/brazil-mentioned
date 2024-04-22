@@ -18,11 +18,11 @@ import { cn } from "@/lib/utils";
 
 const initialState = {
   errors: {
-    nickname: [],
+    username: [],
   },
 };
 
-export const NickanameForm = () => {
+export const UsernameForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const roomType = searchParams.get("room");
@@ -46,25 +46,25 @@ export const NickanameForm = () => {
           </span>
         </CardTitle>
         <CardDescription>
-          Before continuing, make sure to set a nickname
+          Before continuing, make sure to set a username
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <form action={formAction}>
           <Label
-            htmlFor="nickname"
+            htmlFor="username"
             className={cn(
               "text-right",
-              Object.keys(state?.errors?.nickname || {}).length > 0 &&
+              Object.keys(state?.errors?.username || {}).length > 0 &&
                 "text-destructive",
             )}
           >
-            nickname
+            username
           </Label>
-          <Input id="nickname" name="nickname" placeholder="@_3morais" />
+          <Input id="username" name="username" placeholder="@_3morais" />
           {state?.errors ? (
             <p className="text-[0.8rem] font-medium text-destructive">
-              {state?.errors.nickname?.[0]}
+              {state?.errors.username?.[0]}
             </p>
           ) : null}
           <Button className="mt-6" type="submit">

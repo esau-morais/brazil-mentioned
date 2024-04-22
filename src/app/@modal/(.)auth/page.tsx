@@ -1,12 +1,12 @@
-import { NickanameForm } from "@/components/nickname-form";
+import { UsernameForm } from "@/components/username-form";
 import { Modal } from "./modal";
 
-const ParallelNicknameModal = () => {
+const ParallelUsernameModal = () => {
   return (
     <Modal>
-      <NickanameForm />
+      <UsernameForm />
     </Modal>
   );
 };
 
-export default ParallelNicknameModal;
+export default ParallelUsernameModal;

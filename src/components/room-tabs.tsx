@@ -49,17 +49,16 @@ export const RoomTabs = () => {
       content: (
         <Card>
           <CardContent>
-            <form>
+            <form action={() => {}}>
               <div className="flex items-center space-x-2">
-                <Input id="room-code" placeholder="Enter room code" />
+                <Input
+                  id="room-code"
+                  name="room-code"
+                  placeholder="Enter room code"
+                />
                 <Button type="submit" size="icon">
                   <ArrowRight />
                 </Button>
-                <Link
-                  className={buttonVariants({ size: "icon" })}
-                  // TODO: send dynamic room code
-                  href={`/auth?${createQueryString("room", "join.")}`}
-                ></Link>
               </div>
             </form>
           </CardContent>

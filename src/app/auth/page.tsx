@@ -1,9 +1,9 @@
-import { NickanameForm } from "@/components/nickname-form";
+import { UsernameForm } from "@/components/username-form";
 
-const NicknamePage = () => (
+const UsernamePage = () => (
   <div className="flex min-h-dvh w-full items-center justify-center overflow-y-hidden">
-    <NickanameForm />
+    <UsernameForm />
   </div>
 );
 
-export default NicknamePage;
+export default UsernamePage;

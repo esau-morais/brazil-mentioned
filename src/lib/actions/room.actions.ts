@@ -3,10 +3,11 @@
 import { tursoClient } from "../db";
 import { redirect } from "next/navigation";
 import { schema } from "../schemas";
+import { v4 as uuidv4 } from "uuid";
 
 export const createUser = async (_: unknown, formData: FormData) => {
   const validatedFields = await schema.safeParseAsync({
-    nickname: formData.get("nickname"),
+    username: formData.get("username"),
   });
 
   if (!validatedFields.success) {
@@ -16,16 +17,16 @@ export const createUser = async (_: unknown, formData: FormData) => {
   }
 
   const user = await tursoClient.execute({
-    sql: "INSERT INTO users (nickname) VALUES (?)",
-    args: [validatedFields.data.nickname],
+    sql: "INSERT INTO users (username) VALUES (?)",
+    args: [validatedFields.data.username],
   });
 
   if (user.lastInsertRowid) {
-    const room = await tursoClient.execute({
-      sql: "INSERT INTO rooms (name, created_by) VALUES (?, ?)",
-      // TODO: generate dynamic room name based on nickname and user id
-      args: ["any", user.lastInsertRowid],
+    const roomId = uuidv4();
+    await tursoClient.execute({
+      sql: "INSERT INTO rooms (id, created_by) VALUES (?, ?)",
+      args: [roomId, user.lastInsertRowid],
     });
-    redirect(`/room/${room.lastInsertRowid}`);
+    redirect(`/room/${roomId}`);
   }
 };

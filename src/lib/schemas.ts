@@ -5,27 +5,27 @@ import { tursoClient } from "./db";
 const filter = new Filter();
 
 export const schema = z.object({
-  nickname: z
+  username: z
     .string()
-    .min(3, "please enter a nickname")
-    .max(25, "please enter a nickname with 25 characters or less")
+    .min(3, "please enter a username")
+    .max(25, "please enter a username with 25 characters or less")
     .regex(/^(#)?[a-zA-Z0-9]\w*$/, {
-      message: "nickname may only have letters, numbers or underscores",
+      message: "username may only have letters, numbers or underscores",
     })
     .refine((val) => !filter.isProfane(val), {
-      message: "please choose an appropriate nickname",
+      message: "please choose an appropriate username",
     })
     .refine(
-      async (val) => {
+      async (username) => {
         const userExists = await tursoClient.execute({
-          sql: "SELECT nickname FROM users WHERE nickname = ?",
-          args: [val],
+          sql: "SELECT * FROM users WHERE username = ?",
+          args: [username],
         });
 
         return !userExists.rows.length;
       },
       {
-        message: "nickname is already taken",
+        message: "username is already taken",
       },
     ),
 });
