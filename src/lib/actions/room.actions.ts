@@ -41,6 +41,10 @@ export const createUser = async (initialState: any, formData: FormData) => {
     });
     redirect(`/room/${roomId}`);
   } else {
+    await tursoClient.execute({
+      sql: "INSERT INTO users (username) VALUES (?)",
+      args: [validatedFields.data.username],
+    });
     redirect(`/room/${initialState.roomId}`);
   }
 };
