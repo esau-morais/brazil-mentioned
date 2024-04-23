@@ -1,9 +1,9 @@
-import { Poll } from "@/components/poll";
+import { PollMaker } from "@/components/poll/poll-maker";
 
 const Room = ({ params }: { params: { roomId: string } }) => {
   return (
     <div className="min-h-dvh flex justify-center items-center">
-      <Poll />
+      <PollMaker />
     </div>
   );
 };

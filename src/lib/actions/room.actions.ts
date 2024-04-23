@@ -73,3 +73,29 @@ export const joinRoom = async (_: unknown, formData: FormData) => {
 
   redirect(`/auth?room=${validatedFields.data["room-code"]}`);
 };
+
+export const createPoll = async (formData: FormData) => {
+  const question = formData.get("question") ?? "Untitled poll";
+  const options: string[] = [];
+
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith("option-") && value.toString().trim().length > 0) {
+      options.push(value.toString());
+    }
+  }
+
+  const id = uuidv4();
+  const poll = {
+    title: question,
+    options,
+  };
+  await fetch(`http://127.0.0.1:1999/party/${id}`, {
+    method: "POST",
+    body: JSON.stringify(poll),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  redirect(`/poll/${id}`);
+};

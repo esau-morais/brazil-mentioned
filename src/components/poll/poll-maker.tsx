@@ -1,22 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Input } from "./ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 import { Plus, Trash } from "lucide-react";
+import { createPoll } from "@/lib/actions/room.actions";
 
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 8;
 
-export const Poll = () => {
+export const PollMaker = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState<string[]>([]);
   const [newOption, setNewOption] = useState("");
@@ -28,10 +23,8 @@ export const Poll = () => {
     !options.filter((option) => !option.trim().length).length;
 
   const addNewOption = () => {
-    if (newOption?.trim().length) {
-      setOptions((prevOptions) => [...prevOptions, newOption]);
-      setNewOption("");
-    }
+    setOptions((prevOptions) => [...prevOptions, newOption]);
+    setNewOption("");
   };
 
   return (
@@ -40,7 +33,7 @@ export const Poll = () => {
         <CardTitle>Create poll</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <form>
+        <form action={createPoll}>
           <Label htmlFor="question">question (max 300 characters)</Label>
           <Input
             className="mb-4"
@@ -80,17 +73,23 @@ export const Poll = () => {
                   value={newOption}
                   onChange={(e) => setNewOption(e.target.value)}
                 />
-                <Button type="button" size="icon" onClick={addNewOption}>
+                <Button
+                  disabled={!newOption?.trim().length}
+                  type="button"
+                  size="icon"
+                  onClick={addNewOption}
+                >
                   <Plus />
                 </Button>
               </li>
             ) : null}
           </ul>
+
+          <Button className="mt-6" type="submit" disabled={!canSubmit}>
+            Start poll
+          </Button>
         </form>
       </CardContent>
-      <CardFooter>
-        <Button disabled={!canSubmit}>Start poll</Button>
-      </CardFooter>
     </Card>
   );
 };
