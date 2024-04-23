@@ -4,6 +4,7 @@ import { tursoClient } from "../db";
 import { redirect } from "next/navigation";
 import { roomSchema, usernameSchema } from "../schemas";
 import { v4 as uuidv4 } from "uuid";
+import { PARTYKIT_URL } from "../env";
 
 const createNewUser = async (username: string) => {
   const newUser = await tursoClient.execute({
@@ -89,7 +90,7 @@ export const createPoll = async (formData: FormData) => {
     title: question,
     options,
   };
-  await fetch(`http://127.0.0.1:1999/party/${id}`, {
+  await fetch(`${PARTYKIT_URL}/party/${id}`, {
     method: "POST",
     body: JSON.stringify(poll),
     headers: {

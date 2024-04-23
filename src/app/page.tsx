@@ -1,4 +1,5 @@
 import { RoomTabs } from "@/components/room-tabs";
+import { Suspense } from "react";
 
 const Home = () => {
   return (
@@ -10,7 +11,9 @@ const Home = () => {
         </span>
       </h1>
 
-      <RoomTabs />
+      <Suspense>
+        <RoomTabs />
+      </Suspense>
     </section>
   );
 };

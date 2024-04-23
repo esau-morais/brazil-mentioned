@@ -5,6 +5,7 @@ import usePartySocket from "partysocket/react";
 import { PollOptions } from "./poll-options";
 import { Poll } from "@/lib/types";
 import { useCookie } from "@/lib/hooks/use-cookie";
+import { PARTYKIT_URL } from "@/lib/env";
 
 export const PollVoting = ({
   id,
@@ -21,7 +22,7 @@ export const PollVoting = ({
   const [voted, setVoted] = useCookie(`voted_${id}`);
 
   const socket = usePartySocket({
-    host: "http://127.0.0.1:1999",
+    host: PARTYKIT_URL,
     room: id,
     onMessage: (event) => {
       const message = JSON.parse(event.data) as Poll;

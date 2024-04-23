@@ -1,4 +1,5 @@
 import { PollVoting } from "@/components/poll/poll-voting";
+import { PARTYKIT_URL } from "@/lib/env";
 import { Poll } from "@/lib/types";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -6,7 +7,7 @@ import React from "react";
 const PollPage = async ({ params }: { params: { pollId: string } }) => {
   const pollId = params.pollId;
 
-  const req = await fetch(`http://127.0.0.1:1999/party/${pollId}`, {
+  const req = await fetch(`${PARTYKIT_URL}/party/${pollId}`, {
     method: "GET",
     next: {
       revalidate: 0,
