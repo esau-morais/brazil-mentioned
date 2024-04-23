@@ -1,15 +1,15 @@
+import { Poll } from "@/lib/types";
 import type * as Party from "partykit/server";
 
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Room) {}
 
-  poll: any;
+  poll: Poll | undefined;
 
   async onMessage(message: string) {
     if (!this.poll) return;
 
     const event = JSON.parse(message);
-    console.info({ event });
     if (event.type === "vote") {
       this.poll.votes![event.option] += 1;
       this.party.broadcast(JSON.stringify(this.poll));
@@ -19,7 +19,7 @@ export default class Server implements Party.Server {
 
   async onRequest(req: Party.Request) {
     if (req.method === "POST") {
-      const poll = await req.json();
+      const poll = (await req.json()) as Poll;
       this.poll = { ...poll, votes: poll.options.map(() => 0) };
       this.savePoll();
     }

@@ -1,4 +1,5 @@
 import { PollVoting } from "@/components/poll/poll-voting";
+import { Poll } from "@/lib/types";
 import { notFound } from "next/navigation";
 import React from "react";
 
@@ -20,7 +21,7 @@ const PollPage = async ({ params }: { params: { pollId: string } }) => {
     }
   }
 
-  const poll = await req.json();
+  const poll = (await req.json()) as Poll;
 
   return (
     <div className="min-h-dvh flex flex-col justify-center items-center">

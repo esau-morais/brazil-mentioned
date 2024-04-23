@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
@@ -17,6 +15,7 @@ export const PollOptions = ({
 }) => {
   const totalVotes = votes.reduce((a, b) => a + b, 0);
   const mostVotes = Math.max(...votes);
+  const voted = vote === null || vote === undefined;
 
   return (
     <Card>
@@ -35,25 +34,22 @@ export const PollOptions = ({
                         : "bg-muted",
                   )}
                   style={{
-                    width: !vote ? 0 : `${(votes[idx] / totalVotes) * 100}%`,
+                    width: voted ? 0 : `${(votes[idx] / totalVotes) * 100}%`,
                   }}
                 />
 
                 <Button
                   className={cn(
-                    "inline-flex justify-between items-center flex-1 space-x-2 z-20",
-                    !vote ? "cursor-pointer" : "cursor-not-allowed",
-                    !vote ? "" : votes[idx] === mostVotes ? "font-bold" : "",
+                    "select-none inline-flex justify-between items-center flex-1 space-x-2 z-20",
+                    voted ? "" : votes[idx] === mostVotes ? "font-bold" : "",
                   )}
-                  disabled={!!vote}
+                  disabled={!voted}
                   variant="ghost"
                   onClick={() => setVote(idx)}
                 >
-                  {vote === idx ? (
-                    <span className="relative">&#127880;</span>
-                  ) : null}
+                  {vote === idx ? <span>&#127880;</span> : null}
                   <span>{opt}</span>
-                  {vote ? <span>{votes[idx]}</span> : null}
+                  {!voted ? <span>{votes[idx]}</span> : null}
                 </Button>
               </div>
             </li>

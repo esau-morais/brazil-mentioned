@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import usePartySocket from "partysocket/react";
 import { PollOptions } from "./poll-options";
+import { Poll } from "@/lib/types";
+import { useCookie } from "@/lib/hooks/use-cookie";
 
 export const PollVoting = ({
   id,
@@ -16,11 +18,13 @@ export const PollVoting = ({
   const [votes, setVotes] = useState<number[]>(initialVotes ?? []);
   const [vote, setVote] = useState<number | null>(null);
 
+  const [voted, setVoted] = useCookie(`voted_${id}`);
+
   const socket = usePartySocket({
     host: "http://127.0.0.1:1999",
     room: id,
     onMessage: (event) => {
-      const message = JSON.parse(event.data);
+      const message = JSON.parse(event.data) as Poll;
       if (message.votes) {
         setVotes(message.votes);
       }
@@ -33,13 +37,12 @@ export const PollVoting = ({
   };
 
   useEffect(() => {
-    const voted = document.cookie.includes("voted_" + id);
-    if (!vote && voted) {
-      setVote(+voted);
-    } else if (vote && !voted) {
-      document.cookie = `voted_${id}=${vote}`;
+    if (vote === null || vote === undefined) {
+      if (voted) setVote(+voted);
+    } else {
+      setVoted(vote.toString());
     }
-  }, [id, vote]);
+  }, [id, setVoted, vote, voted]);
 
   return (
     <PollOptions
