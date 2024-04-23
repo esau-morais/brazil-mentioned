@@ -12,7 +12,7 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChevronLeft } from "lucide-react";
-import { createUser } from "@/lib/actions/room.actions";
+import { authenticateUser } from "@/lib/actions/room.actions";
 import { useFormState } from "react-dom";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export const UsernameForm = () => {
     },
   };
 
-  const [state, formAction] = useFormState(createUser, initialState);
+  const [state, formAction] = useFormState(authenticateUser, initialState);
 
   return (
     <Card>

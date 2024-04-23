@@ -5,7 +5,19 @@ import { redirect } from "next/navigation";
 import { roomSchema, usernameSchema } from "../schemas";
 import { v4 as uuidv4 } from "uuid";
 
-export const createUser = async (initialState: any, formData: FormData) => {
+const createNewUser = async (username: string) => {
+  const newUser = await tursoClient.execute({
+    sql: "INSERT INTO users (username) VALUES (?)",
+    args: [username],
+  });
+
+  return Number(newUser.lastInsertRowid);
+};
+
+export const authenticateUser = async (
+  initialState: any,
+  formData: FormData,
+) => {
   const validatedFields = await usernameSchema.safeParseAsync({
     username: formData.get("username"),
   });
@@ -16,38 +28,37 @@ export const createUser = async (initialState: any, formData: FormData) => {
     };
   }
 
-  const userExists = await tursoClient.execute({
+  const existingUser = await tursoClient.execute({
     sql: "SELECT * FROM users WHERE username = ?",
     args: [validatedFields.data.username],
   });
-  const isCreateRoom = initialState.roomId === "create";
+  const isCreatingRoom = initialState.roomId === "create";
 
-  if (isCreateRoom && userExists.rows.length) {
+  if (isCreatingRoom && existingUser.rows.length) {
     return {
       errors: {
         username: ["username is already taken"],
       },
     };
-  } else if (isCreateRoom && !userExists.rows.length) {
-    const user = await tursoClient.execute({
-      sql: "INSERT INTO users (username) VALUES (?)",
-      args: [validatedFields.data.username],
-    });
+  }
 
+  const userId = existingUser.rows.length
+    ? Number(existingUser.rows[0].id)
+    : await createNewUser(validatedFields.data.username);
+  if (isCreatingRoom) {
     const roomId = uuidv4();
-    await tursoClient.execute({
-      sql: "INSERT INTO rooms (id, created_by) VALUES (?, ?)",
-      args: [roomId, Number(user.lastInsertRowid)],
-    });
+    await createRoom(roomId, userId);
     redirect(`/room/${roomId}`);
   } else {
-    await tursoClient.execute({
-      sql: "INSERT INTO users (username) VALUES (?)",
-      args: [validatedFields.data.username],
-    });
     redirect(`/room/${initialState.roomId}`);
   }
 };
+
+const createRoom = async (roomId: string, userId: number) =>
+  await tursoClient.execute({
+    sql: "INSERT INTO rooms (id, created_by) VALUES (?, ?)",
+    args: [roomId, userId],
+  });
 
 export const joinRoom = async (_: unknown, formData: FormData) => {
   const validatedFields = await roomSchema.safeParseAsync({
