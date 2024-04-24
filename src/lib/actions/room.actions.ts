@@ -20,7 +20,7 @@ export const authenticateUser = async (
   initialState: any,
   formData: FormData,
 ) => {
-  const validatedFields = await usernameSchema.safeParseAsync({
+  const validatedFields = usernameSchema.safeParse({
     username: formData.get("username"),
   });
 
