@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { roomSchema, usernameSchema } from "../schemas";
 import { v4 as uuidv4 } from "uuid";
 import { PARTYKIT_URL } from "../env";
+import { createSession } from "../session";
 
 const createNewUser = async (username: string) => {
   const newUser = await tursoClient.execute({
@@ -46,6 +47,9 @@ export const authenticateUser = async (
   const userId = existingUser.rows.length
     ? Number(existingUser.rows[0].id)
     : await createNewUser(validatedFields.data.username);
+
+  await createSession(userId.toString());
+
   if (isCreatingRoom) {
     const roomId = uuidv4();
     await createRoom(roomId, userId);
