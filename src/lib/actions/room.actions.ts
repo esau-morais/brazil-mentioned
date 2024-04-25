@@ -2,7 +2,7 @@
 
 import { tursoClient } from "../db";
 import { redirect } from "next/navigation";
-import { roomSchema, usernameSchema } from "../schemas";
+import { pollSchema, roomSchema, usernameSchema } from "../schemas";
 import { v4 as uuidv4 } from "uuid";
 import { PARTYKIT_URL } from "../env";
 import { createSession } from "../session";
@@ -79,8 +79,17 @@ export const joinRoom = async (_: unknown, formData: FormData) => {
   redirect(`/auth?room=${validatedFields.data["room-code"]}`);
 };
 
-export const createPoll = async (formData: FormData) => {
-  const question = formData.get("question") ?? "Untitled poll";
+export const createPoll = async (_: unknown, formData: FormData) => {
+  const validatedFields = pollSchema.safeParse({
+    question: formData.get("question"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
   const options: string[] = [];
 
   for (const [key, value] of formData.entries()) {
@@ -91,7 +100,7 @@ export const createPoll = async (formData: FormData) => {
 
   const id = uuidv4();
   const poll = {
-    title: question,
+    title: validatedFields.data.question,
     options,
   };
   await fetch(`${PARTYKIT_URL}/party/${id}`, {

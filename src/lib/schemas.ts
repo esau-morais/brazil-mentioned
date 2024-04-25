@@ -36,3 +36,10 @@ export const roomSchema = z.object({
       },
     ),
 });
+
+export const pollSchema = z.object({
+  question: z
+    .string()
+    .min(1, "please enter a question")
+    .max(300, "please enter only up to 300 characters"),
+});

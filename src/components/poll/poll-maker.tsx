@@ -7,6 +7,7 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Plus, Trash } from "lucide-react";
 import { createPoll } from "@/lib/actions/room.actions";
+import { useFormState } from "react-dom";
 
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 8;
@@ -17,8 +18,11 @@ export const PollMaker = () => {
   const [newOption, setNewOption] = useState("");
   const newOptionRef = useRef<HTMLInputElement>(null);
 
+  const [state, formAction] = useFormState(createPoll, {
+    errors: { question: [] },
+  });
+
   const canSubmit =
-    question.length &&
     options.length >= MIN_OPTIONS &&
     !options.filter((option) => !option.trim().length).length;
 
@@ -33,7 +37,7 @@ export const PollMaker = () => {
         <CardTitle>Create poll</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <form action={createPoll}>
+        <form action={formAction}>
           <Label htmlFor="question">question (max 300 characters)</Label>
           <Input
             className="mb-4"
@@ -84,6 +88,12 @@ export const PollMaker = () => {
               </li>
             ) : null}
           </ul>
+
+          {state?.errors ? (
+            <p className="text-[0.8rem] font-medium text-destructive">
+              {state?.errors.question?.[0]}
+            </p>
+          ) : null}
 
           <Button className="mt-6" type="submit" disabled={!canSubmit}>
             Start poll
