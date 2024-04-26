@@ -11,6 +11,7 @@ export type Poll = {
   title: string;
   options: string[];
   votes?: number[];
+  duration: number;
 };
 
 export type SessionPayload = { userId: string; expiresAt: Date };

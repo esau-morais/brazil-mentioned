@@ -6,11 +6,11 @@ const filter = new Filter();
 
 export const usernameSchema = z.object({
   username: z
-    .string()
-    .min(3, "please enter a username")
+    .string({ required_error: "please enter a username" })
+    .min(3, "please enter a username with at least 3 characters")
     .max(25, "please enter a username with 25 characters or less")
     .regex(/^(#)?[a-zA-Z0-9]\w*$/, {
-      message: "username may only have letters, numbers or underscores",
+      message: "please use only have letters, numbers or underscores",
     })
     .refine((val) => !filter.isProfane(val), {
       message: "please choose an appropriate username",
@@ -41,18 +41,15 @@ const MIN_OPTIONS = 2;
 
 export const pollSchema = z.object({
   title: z
-    .string()
-    .min(1, "please enter a title")
+    .string({ required_error: "please enter a title" })
     .max(300, "please enter only up to 300 characters"),
   options: z
     .array(
       z
-        .string()
-        .min(1, "please enter the option")
+        .string({ required_error: "please enter the option" })
         .max(55, "please enter up to 55 characters"),
     )
     .min(MIN_OPTIONS, `please enter at least ${MIN_OPTIONS} options`)
     .max(8, "please enter up to 8 options"),
-  // TODO: when implement duration logic, turn required
-  duration: z.string().optional(),
+  duration: z.number(),
 });

@@ -17,31 +17,31 @@ import {
 } from "../ui/select";
 
 const MAX_OPTIONS = 8;
-// TODO: let the user add custom duration
 export const DURATIONS = [
   {
     label: "1 hour",
-    value: "1h",
+    // TODO: change to 1h back
+    duration: 1_800,
   },
   {
     label: "4 hours",
-    value: "4h",
+    duration: 14_400_000,
   },
   {
     label: "8 hours",
-    value: "8h",
+    duration: 28_800_000,
   },
   {
     label: "24 hours",
-    value: "24h",
+    duration: 86_400_000,
   },
   {
     label: "3 days",
-    value: "3d",
+    duration: 259_200_000,
   },
   {
     label: "1 week",
-    value: "1w",
+    duration: 604_800_000,
   },
 ];
 
@@ -123,13 +123,13 @@ export const PollMaker = () => {
           </ul>
 
           <Label>duration</Label>
-          <Select>
+          <Select name="duration">
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="choose" />
             </SelectTrigger>
             <SelectContent>
               {DURATIONS.map((dur) => (
-                <SelectItem key={dur.value} value={dur.value}>
+                <SelectItem key={dur.duration} value={dur.duration.toString()}>
                   {dur.label}
                 </SelectItem>
               ))}

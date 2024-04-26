@@ -5,6 +5,7 @@ export default class Server implements Party.Server {
   constructor(readonly party: Party.Room) {}
 
   poll: Poll | undefined;
+  pollTimeout: NodeJS.Timeout | undefined;
 
   async onMessage(message: string) {
     if (!this.poll) return;
@@ -40,8 +41,22 @@ export default class Server implements Party.Server {
     }
   }
 
+  async endPoll() {
+    if (this.pollTimeout) {
+      clearTimeout(this.pollTimeout);
+    }
+    this.poll = undefined;
+    await this.party.storage.delete("poll");
+  }
+
   async onStart() {
     this.poll = await this.party.storage.get("poll");
+    if (this.poll && this.poll.duration) {
+      this.pollTimeout = setTimeout(async () => {
+        await this.endPoll();
+        this.party.broadcast("poll ended");
+      }, this.poll.duration);
+    }
   }
 }
 

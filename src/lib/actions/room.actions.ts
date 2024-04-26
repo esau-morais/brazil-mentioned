@@ -91,6 +91,7 @@ export const createPoll = async (_: unknown, formData: FormData) => {
   const validatedFields = pollSchema.safeParse({
     title: formData.get("title"),
     options,
+    duration: Number(formData.get("duration")),
   });
 
   if (!validatedFields.success) {
@@ -103,6 +104,7 @@ export const createPoll = async (_: unknown, formData: FormData) => {
   const poll = {
     title: validatedFields.data.title,
     options: validatedFields.data.options,
+    duration: validatedFields.data.duration,
   };
   await fetch(`${PARTYKIT_URL}/party/${id}`, {
     method: "POST",
