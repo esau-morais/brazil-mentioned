@@ -102,7 +102,7 @@ export const createPoll = async (_: unknown, formData: FormData) => {
   const id = uuidv4();
   const poll = {
     title: validatedFields.data.title,
-    options,
+    options: validatedFields.data.options,
   };
   await fetch(`${PARTYKIT_URL}/party/${id}`, {
     method: "POST",

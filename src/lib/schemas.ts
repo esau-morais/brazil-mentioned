@@ -53,5 +53,6 @@ export const pollSchema = z.object({
     )
     .min(MIN_OPTIONS, `please enter at least ${MIN_OPTIONS} options`)
     .max(8, "please enter up to 8 options"),
-  duration: z.string(),
+  // TODO: when implement duration logic, turn required
+  duration: z.string().optional(),
 });
