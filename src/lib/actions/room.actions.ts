@@ -80,8 +80,17 @@ export const joinRoom = async (_: unknown, formData: FormData) => {
 };
 
 export const createPoll = async (_: unknown, formData: FormData) => {
+  const options: string[] = [];
+
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith("option-")) {
+      options.push(value.toString());
+    }
+  }
+
   const validatedFields = pollSchema.safeParse({
-    question: formData.get("question"),
+    title: formData.get("title"),
+    options,
   });
 
   if (!validatedFields.success) {
@@ -90,17 +99,9 @@ export const createPoll = async (_: unknown, formData: FormData) => {
     };
   }
 
-  const options: string[] = [];
-
-  for (const [key, value] of formData.entries()) {
-    if (key.startsWith("option-") && value.toString().trim().length > 0) {
-      options.push(value.toString());
-    }
-  }
-
   const id = uuidv4();
   const poll = {
-    title: validatedFields.data.question,
+    title: validatedFields.data.title,
     options,
   };
   await fetch(`${PARTYKIT_URL}/party/${id}`, {

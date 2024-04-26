@@ -37,9 +37,21 @@ export const roomSchema = z.object({
     ),
 });
 
+const MIN_OPTIONS = 2;
+
 export const pollSchema = z.object({
-  question: z
+  title: z
     .string()
-    .min(1, "please enter a question")
+    .min(1, "please enter a title")
     .max(300, "please enter only up to 300 characters"),
+  options: z
+    .array(
+      z
+        .string()
+        .min(1, "please enter the option")
+        .max(55, "please enter up to 55 characters"),
+    )
+    .min(MIN_OPTIONS, `please enter at least ${MIN_OPTIONS} options`)
+    .max(8, "please enter up to 8 options"),
+  duration: z.string(),
 });
